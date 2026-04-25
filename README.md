@@ -25,4 +25,4 @@ it exports deployment artifacts to `artifacts/`:
 ## Notes
 
 - Export requires notebook objects from prior sections (`best_obj`, `metrics_df`, `optimal_row`, etc.).
-- Export cell includes path auto-detection for project root by searching for `data/telco.csv`.
+- Export cell includes path auto-detection for project root by searching for `data/telco_churn.csv (or fallback `data/telco.csv`)`.

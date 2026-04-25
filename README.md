@@ -1,28 +1,45 @@
-# Telco Customer Churn API (Notebook-first Phase 1)
+# Telco Customer Churn API (Notebook-first + FastAPI)
 
-Phase 1 is implemented **inside the provided notebook**:
+This repository now has two implementation phases:
+
+- **Phase 1 (Notebook):** train/select model and export artifacts.
+- **Phase 2 (API):** serve predictions through FastAPI using exported artifacts.
+
+## Phase 1: Export model artifacts from notebook
+
+Phase 1 is implemented **inside**:
 
 - `notebooks/telco_churn_ordered_sota_modeling.ipynb`
 
-A new section was added to the notebook:
-
-- `## 21) Phase 1 Export for API Deployment`
-
-When you run the notebook through the model-selection cells and then execute section 21,
-it exports deployment artifacts to `artifacts/`:
+Run notebook section `21) Phase 1 Export for API Deployment` to generate:
 
 - `artifacts/churn_model.joblib`
 - `artifacts/metadata.json`
 - `artifacts/leaderboard.json`
 - `artifacts/sample_payload.json`
 
-## How to use
+## Phase 2: Run FastAPI service
 
-1. Open and run `notebooks/telco_churn_ordered_sota_modeling.ipynb` from top to bottom.
-2. Execute section `21) Phase 1 Export for API Deployment`.
-3. Verify the files above exist under `artifacts/`.
+Install dependencies:
 
-## Notes
+```bash
+pip install -r requirements.txt
+```
 
-- Export requires notebook objects from prior sections (`best_obj`, `metrics_df`, `optimal_row`, etc.).
-- Export cell includes path auto-detection for project root by searching for `data/telco_churn.csv (or fallback `data/telco.csv`)`.
+Run API:
+
+```bash
+uvicorn src.main:app --reload
+```
+
+### Endpoints
+
+- `GET /` -> service banner
+- `GET /health` -> artifact/model load status
+- `POST /predict` -> single customer churn prediction
+- `POST /predict-batch` -> multiple customer churn predictions
+
+### Important
+
+If artifacts are missing, `/predict` and `/predict-batch` return **503** with instructions.
+Generate artifacts first by running notebook section 21.

@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import joblib
-import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -141,61 +140,6 @@ class ModelService:
     def _coerce_input(df: pd.DataFrame) -> pd.DataFrame:
         if "TotalCharges" in df.columns:
             df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-        if "MonthlyCharges" in df.columns:
-            df["MonthlyCharges"] = pd.to_numeric(df["MonthlyCharges"], errors="coerce")
-        if "tenure" in df.columns:
-            df["tenure"] = pd.to_numeric(df["tenure"], errors="coerce")
-        return df
-
-    @staticmethod
-    def _add_engineered_features(df: pd.DataFrame) -> pd.DataFrame:
-        # Mirror notebook feature engineering needed by the exported model contract.
-        services = [
-            "OnlineSecurity",
-            "OnlineBackup",
-            "DeviceProtection",
-            "TechSupport",
-            "StreamingTV",
-            "StreamingMovies",
-        ]
-
-        df["tenure_group"] = pd.cut(
-            df["tenure"],
-            bins=[-1, 12, 24, 48, 72],
-            labels=["new", "mid", "loyal", "very_loyal"],
-        )
-        df["is_monthly"] = (df["Contract"] == "Month-to-month").astype(int)
-        df["is_electronic"] = (df["PaymentMethod"] == "Electronic check").astype(int)
-        df["num_services"] = df[services].apply(lambda x: (x == "Yes").sum(), axis=1)
-        df["charge_group"] = pd.cut(
-            df["MonthlyCharges"],
-            bins=[0, 50, 80, 120],
-            labels=["low", "mid", "high"],
-            include_lowest=True,
-        )
-
-        df["avg_monthly_spend_proxy"] = df["TotalCharges"] / df["tenure"].where(df["tenure"] > 0, 1)
-        df["has_security_bundle"] = ((df["OnlineSecurity"] == "Yes") & (df["TechSupport"] == "Yes")).astype(int)
-        df["lacks_protection_bundle"] = ((df["OnlineSecurity"] != "Yes") & (df["TechSupport"] != "Yes")).astype(int)
-        df["monthly_and_electronic"] = (
-            (df["Contract"] == "Month-to-month") & (df["PaymentMethod"] == "Electronic check")
-        ).astype(int)
-        df["streaming_heavy"] = ((df["StreamingTV"] == "Yes") & (df["StreamingMovies"] == "Yes")).astype(int)
-
-        df["monthly_charges_log1p"] = df["MonthlyCharges"].clip(lower=0).apply(lambda v: np.log1p(v))
-        df["total_charges_log1p"] = df["TotalCharges"].clip(lower=0).apply(lambda v: np.log1p(v))
-        df["tenure_group_v2"] = pd.cut(
-            df["tenure"],
-            bins=[-1, 6, 12, 24, 48, 72],
-            labels=["0_6", "7_12", "13_24", "25_48", "49_72"],
-        )
-        df["services_per_tenure_month"] = df["num_services"] / df["tenure"].where(df["tenure"] > 0, 1)
-
-        # Notebook's rare-level collapse kept all current categories at >=2% share,
-        # so group columns are equivalent to raw columns for this dataset.
-        df["PaymentMethod_grp"] = df["PaymentMethod"]
-        df["MultipleLines_grp"] = df["MultipleLines"]
-
         return df
 
     def predict_one(self, payload: CustomerFeatures) -> PredictResult:
@@ -208,7 +152,6 @@ class ModelService:
         row = payload.model_dump()
         df = pd.DataFrame([row])
         df = self._coerce_input(df)
-        df = self._add_engineered_features(df)
 
         if features:
             missing = [c for c in features if c not in df.columns]

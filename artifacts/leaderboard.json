@@ -1,0 +1,38 @@
+[
+  {
+    "model": "logistic_regression",
+    "roc_auc_raw": 0.8468960706812367,
+    "pr_auc_raw": 0.6658273016723171,
+    "brier_raw": 0.16448587326755829,
+    "roc_auc_calibrated": 0.847048490015242,
+    "pr_auc_calibrated": 0.6657261033684496,
+    "brier_calibrated": 0.13496339037697772
+  },
+  {
+    "model": "random_forest",
+    "roc_auc_raw": 0.8337285902503293,
+    "pr_auc_raw": 0.6377528150361993,
+    "brier_raw": 0.1442689672561803,
+    "roc_auc_calibrated": 0.8379756645741301,
+    "pr_auc_calibrated": 0.6450039594441959,
+    "brier_calibrated": 0.13900555097565043
+  },
+  {
+    "model": "hist_gradient_boosting",
+    "roc_auc_raw": 0.8254682373608204,
+    "pr_auc_raw": 0.622160052523409,
+    "brier_raw": 0.14653846123973777,
+    "roc_auc_calibrated": 0.8316980547159576,
+    "pr_auc_calibrated": 0.6375155330725935,
+    "brier_calibrated": 0.14057936947790386
+  },
+  {
+    "model": "extra_trees",
+    "roc_auc_raw": 0.8227388979307138,
+    "pr_auc_raw": 0.625373763479495,
+    "brier_raw": 0.1564546480871907,
+    "roc_auc_calibrated": 0.8309204577746776,
+    "pr_auc_calibrated": 0.6369299864393215,
+    "brier_calibrated": 0.1415159742294595
+  }
+]

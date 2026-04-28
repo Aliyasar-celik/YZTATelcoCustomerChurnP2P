@@ -7,16 +7,16 @@ sdk: docker
 app_port: 7860
 ---
 
-# Telco Customer Churn API (Notebook-first + FastAPI)
+# Telco Customer Churn API 
 
-This repository now has two implementation phases:
+This repository now has two implementation steps you can skip Step 1 since it is already done:
 
-- **Phase 1 (Notebook):** train/select model and export artifacts.
-- **Phase 2 (API):** serve predictions through FastAPI using exported artifacts.
+- **Step 1 (Notebook):** train/select model and export artifacts.
+- **Step 2 (API):** serve predictions through FastAPI using exported artifacts.
 
-## Phase 1: Export model artifacts from notebook
+## Step 1: Export model artifacts from notebook
 
-Phase 1 is implemented **inside**:
+Step 1 is implemented **inside**:
 
 - `notebooks/telco_churn_ordered_sota_modeling.ipynb`
 
@@ -27,7 +27,7 @@ Run notebook section `21) Phase 1 Export for API Deployment` to generate:
 - `artifacts/leaderboard.json`
 - `artifacts/sample_payload.json`
 
-## Phase 2: Run FastAPI service
+## Step 2: Run FastAPI service
 
 Install dependencies:
 
@@ -51,4 +51,4 @@ uvicorn src.main:app --reload
 ### Important
 
 If artifacts are missing, `/predict` and `/predict-batch` return **503** with instructions.
-Generate artifacts first by running notebook section 21.
+Generate artifacts first by running notebook section 21. 

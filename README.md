@@ -1,3 +1,12 @@
+---
+title: Telco Churn API
+emoji: 📉
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+---
+
 # Telco Customer Churn API (Notebook-first + FastAPI)
 
 This repository now has two implementation phases:
